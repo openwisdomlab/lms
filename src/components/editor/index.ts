@@ -11,3 +11,21 @@ export {
   ChartBlock,
   scientificExtensions,
 } from "./extensions/scientific-blocks";
+
+// Enhanced scientific blocks with NodeView renderers
+export {
+  EnhancedHypothesisBlock,
+  EnhancedMethodologyBlock,
+  EnhancedDataBlock,
+  EnhancedConclusionBlock,
+  EvidenceLinkBlock,
+  enhancedScientificExtensions,
+} from "./extensions/enhanced-scientific-blocks";
+
+// NodeView components
+export {
+  HypothesisNodeView,
+  MethodologyNodeView,
+  DataNodeView,
+  ConclusionNodeView,
+} from "./node-views";
