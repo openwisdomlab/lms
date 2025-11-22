@@ -19,6 +19,8 @@ import {
   Search,
   Plus,
   Home,
+  Calendar,
+  Brain,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -45,7 +47,9 @@ interface NavSection {
 
 const mainNav: NavItem[] = [
   { title: "Mission Control", href: "/lab", icon: Home },
+  { title: "Daily Learning", href: "/lab/learn", icon: Brain, badge: "3" },
   { title: "Challenges", href: "/lab/missions", icon: Target },
+  { title: "Events", href: "/lab/events", icon: Calendar },
   { title: "My Workspace", href: "/lab/workspace", icon: FlaskConical },
   { title: "Knowledge Base", href: "/lab/knowledge", icon: Globe },
   { title: "Teams", href: "/lab/teams", icon: Users },
