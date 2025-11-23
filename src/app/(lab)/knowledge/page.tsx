@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import {
   Globe,
   Search,
@@ -10,12 +12,16 @@ import {
   FileText,
   Network,
   Sparkles,
+  List,
+  LayoutGrid,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { InteractiveKnowledgeGraph, type KnowledgeNode, type KnowledgeEdge } from "@/components/knowledge/interactive-knowledge-graph";
+import { useRouter } from "next/navigation";
 
 // Mock data for public knowledge base
 const trendingNodes = [
@@ -99,7 +105,107 @@ const categories = [
   { name: "Medicine", count: 876, icon: "⚕️" },
 ];
 
+// Demo data for knowledge graph visualization
+const demoGraphNodes: KnowledgeNode[] = [
+  {
+    id: "h1",
+    title: "CRISPR can target multiple genes simultaneously",
+    type: "hypothesis",
+    summary: "Testing multiplexed gene editing efficiency",
+    confidence: 0.85,
+    forkCount: 12,
+    citationCount: 45,
+    isVerified: true,
+    author: "Dr. Sarah Chen",
+  },
+  {
+    id: "e1",
+    title: "Multi-target CRISPR experiment",
+    type: "experiment",
+    summary: "Controlled lab experiment with HeLa cells",
+    confidence: 0.9,
+    forkCount: 8,
+    author: "Sarah Chen Lab",
+  },
+  {
+    id: "d1",
+    title: "Gene editing efficiency dataset",
+    type: "data",
+    summary: "N=500 samples, 95% CI",
+    forkCount: 23,
+    citationCount: 67,
+  },
+  {
+    id: "a1",
+    title: "Statistical analysis of editing rates",
+    type: "analysis",
+    summary: "Bayesian analysis showing 87% success rate",
+    confidence: 0.78,
+  },
+  {
+    id: "l1",
+    title: "Review: CRISPR Technology 2024",
+    type: "literature",
+    summary: "Comprehensive review of recent advances",
+    citationCount: 156,
+  },
+  {
+    id: "m1",
+    title: "Optimized guide RNA design protocol",
+    type: "methodology",
+    summary: "Step-by-step protocol for sgRNA optimization",
+    forkCount: 45,
+  },
+  {
+    id: "h2",
+    title: "Off-target effects are minimized with AI-designed guides",
+    type: "hypothesis",
+    summary: "AI optimization reduces off-target binding",
+    confidence: 0.72,
+    forkCount: 5,
+  },
+  {
+    id: "s1",
+    title: "Synthesis: CRISPR Best Practices",
+    type: "synthesis",
+    summary: "Combined findings from 23 studies",
+    isVerified: true,
+    citationCount: 89,
+  },
+  {
+    id: "q1",
+    title: "Can CRISPR edit mitochondrial DNA?",
+    type: "question",
+    summary: "Open research question",
+  },
+];
+
+const demoGraphEdges: KnowledgeEdge[] = [
+  { id: "e1-h1", source: "e1", target: "h1", type: "supports", strength: 0.9 },
+  { id: "d1-e1", source: "d1", target: "e1", type: "derived_from" },
+  { id: "a1-d1", source: "a1", target: "d1", type: "extends" },
+  { id: "a1-h1", source: "a1", target: "h1", type: "supports", strength: 0.85 },
+  { id: "l1-h1", source: "l1", target: "h1", type: "references" },
+  { id: "m1-e1", source: "m1", target: "e1", type: "prerequisite" },
+  { id: "h2-h1", source: "h2", target: "h1", type: "extends" },
+  { id: "s1-h1", source: "s1", target: "h1", type: "cites" },
+  { id: "s1-a1", source: "s1", target: "a1", type: "cites" },
+  { id: "q1-h1", source: "q1", target: "h1", type: "related" },
+  { id: "m1-h2", source: "m1", target: "h2", type: "supports", strength: 0.7 },
+];
+
 export default function KnowledgeBasePage() {
+  const router = useRouter();
+  const [viewMode, setViewMode] = useState<"list" | "graph">("list");
+
+  const handleNodeClick = (node: KnowledgeNode) => {
+    console.log("Node clicked:", node);
+  };
+
+  const handleNodeDoubleClick = (node: KnowledgeNode) => {
+    router.push(`/research/${node.id}`);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -118,15 +224,61 @@ export default function KnowledgeBasePage() {
           <Button variant="outline" size="icon">
             <Filter className="w-4 h-4" />
           </Button>
-          <Button className="gap-2">
-            <Network className="w-4 h-4" />
-            Graph View
-          </Button>
+          <div className="flex border rounded-md overflow-hidden">
+            <Button
+              variant={viewMode === "list" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("list")}
+              className="rounded-none gap-2"
+            >
+              <List className="w-4 h-4" />
+              List
+            </Button>
+            <Button
+              variant={viewMode === "graph" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("graph")}
+              className="rounded-none gap-2"
+            >
+              <Network className="w-4 h-4" />
+              Graph
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Categories */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
+      {/* Graph View */}
+      {viewMode === "graph" && (
+        <Card className="overflow-hidden">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Network className="w-5 h-5" />
+              Knowledge Graph Explorer
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Visualize connections between hypotheses, experiments, and evidence. Click nodes to select, double-click to open.
+            </p>
+          </CardHeader>
+          <CardContent className="p-0">
+            <InteractiveKnowledgeGraph
+              nodes={demoGraphNodes}
+              edges={demoGraphEdges}
+              currentNodeId="h1"
+              onNodeClick={handleNodeClick}
+              onNodeDoubleClick={handleNodeDoubleClick}
+              height="650px"
+              showMinimap={true}
+              showControls={true}
+            />
+          </CardContent>
+        </Card>
+      )}
+
+      {/* List View */}
+      {viewMode === "list" && (
+        <>
+          {/* Categories */}
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
         {categories.map((category) => (
           <Card
             key={category.name}
@@ -248,6 +400,8 @@ export default function KnowledgeBasePage() {
           </div>
         </TabsContent>
       </Tabs>
+        </>
+      )}
     </div>
   );
 }
