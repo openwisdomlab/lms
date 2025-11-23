@@ -10,31 +10,54 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        /* Core semantic colors */
         border: "hsl(var(--border))",
+        "border-subtle": "hsl(var(--border-subtle))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+
+        /* Primary - Main actions */
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
+
+        /* Secondary - Subtle backgrounds */
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
+
+        /* Muted - Disabled, placeholder states */
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
         },
+
+        /* Accent - Single restrained accent color */
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+          primary: "hsl(var(--accent-primary))",
         },
+
+        /* Semantic status colors */
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+
+        /* Overlay surfaces */
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
@@ -43,6 +66,8 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+
+        /* Sidebar */
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -54,20 +79,47 @@ const config: Config = {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
+
+      /* Border radius - Subtle, tool-like */
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+
+      /* Font family */
+      fontFamily: {
+        sans: [
+          "ui-sans-serif",
+          "system-ui",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
+          "Roboto",
+          "Helvetica Neue",
+          "Arial",
+          "Noto Sans",
+          "sans-serif",
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji",
+        ],
+        mono: "var(--font-mono)",
+      },
+
+      /* Typography plugin configuration */
       typography: {
         DEFAULT: {
           css: {
             maxWidth: "none",
+            color: "hsl(var(--foreground))",
             code: {
               backgroundColor: "hsl(var(--muted))",
               padding: "0.2em 0.4em",
               borderRadius: "0.25rem",
               fontWeight: "400",
+              color: "hsl(var(--foreground))",
             },
             "code::before": {
               content: '""',
@@ -75,8 +127,35 @@ const config: Config = {
             "code::after": {
               content: '""',
             },
+            a: {
+              color: "hsl(var(--accent-primary))",
+              textDecoration: "none",
+              "&:hover": {
+                textDecoration: "underline",
+              },
+            },
+            strong: {
+              color: "hsl(var(--foreground))",
+            },
+            h1: {
+              color: "hsl(var(--foreground))",
+            },
+            h2: {
+              color: "hsl(var(--foreground))",
+            },
+            h3: {
+              color: "hsl(var(--foreground))",
+            },
+            h4: {
+              color: "hsl(var(--foreground))",
+            },
           },
         },
+      },
+
+      /* Animation for smooth transitions */
+      transitionProperty: {
+        colors: "color, background-color, border-color, text-decoration-color, fill, stroke",
       },
     },
   },

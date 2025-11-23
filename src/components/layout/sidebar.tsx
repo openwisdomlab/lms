@@ -1,15 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import {
   Rocket,
   FlaskConical,
   Globe,
   Users,
   Award,
-  Settings,
   ChevronLeft,
   ChevronRight,
   Target,
@@ -34,7 +33,7 @@ import {
 } from "@/components/ui/tooltip";
 
 interface NavItem {
-  title: string;
+  titleKey: string;
   href: string;
   icon: React.ElementType;
   badge?: string;
@@ -46,22 +45,22 @@ interface NavSection {
 }
 
 const mainNav: NavItem[] = [
-  { title: "Mission Control", href: "/lab", icon: Home },
-  { title: "Daily Learning", href: "/lab/learn", icon: Brain, badge: "3" },
-  { title: "Challenges", href: "/lab/missions", icon: Target },
-  { title: "Events", href: "/lab/events", icon: Calendar },
-  { title: "My Workspace", href: "/lab/workspace", icon: FlaskConical },
-  { title: "Knowledge Base", href: "/lab/knowledge", icon: Globe },
-  { title: "Teams", href: "/lab/teams", icon: Users },
+  { titleKey: "missionControl", href: "/(lab)", icon: Home },
+  { titleKey: "learn", href: "/(lab)/learn", icon: Brain, badge: "3" },
+  { titleKey: "missions", href: "/(lab)/missions", icon: Target },
+  { titleKey: "events", href: "/(lab)/events", icon: Calendar },
+  { titleKey: "workspace", href: "/(lab)/workspace", icon: FlaskConical },
+  { titleKey: "knowledge", href: "/(lab)/knowledge", icon: Globe },
+  { titleKey: "teams", href: "/(lab)/teams", icon: Users },
 ];
 
 const secondaryNav: NavSection[] = [
   {
     title: "Research",
     items: [
-      { title: "My Nodes", href: "/lab/workspace/nodes", icon: FileText },
-      { title: "Artifacts", href: "/lab/workspace/artifacts", icon: BookOpen },
-      { title: "Analytics", href: "/lab/workspace/analytics", icon: BarChart3 },
+      { titleKey: "My Nodes", href: "/(lab)/workspace/nodes", icon: FileText },
+      { titleKey: "Artifacts", href: "/(lab)/workspace/artifacts", icon: BookOpen },
+      { titleKey: "Analytics", href: "/(lab)/workspace/analytics", icon: BarChart3 },
     ],
   },
 ];
@@ -69,6 +68,8 @@ const secondaryNav: NavSection[] = [
 export function Sidebar() {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const t = useTranslations("nav");
+  const commonT = useTranslations("common");
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -80,12 +81,12 @@ export function Sidebar() {
       >
         {/* Logo & Brand */}
         <div className="flex items-center h-16 px-4 border-b">
-          <Link href="/lab" className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
-              <Rocket className="w-5 h-5 text-primary-foreground" />
+          <Link href="/(lab)" className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-md bg-foreground flex items-center justify-center shrink-0">
+              <Rocket className="w-5 h-5 text-background" />
             </div>
             {!isCollapsed && (
-              <span className="font-semibold text-lg">NextGen LMS</span>
+              <span className="font-semibold text-lg tracking-tight">NextGen LMS</span>
             )}
           </Link>
         </div>
@@ -99,7 +100,7 @@ export function Sidebar() {
               size="sm"
             >
               <Search className="w-4 h-4 mr-2" />
-              Search...
+              {commonT("search")}...
               <kbd className="ml-auto text-xs bg-muted px-1.5 py-0.5 rounded">
                 ⌘K
               </kbd>
@@ -112,7 +113,7 @@ export function Sidebar() {
           <div className="px-3 pb-2">
             <Button className="w-full gap-2" size="sm">
               <Plus className="w-4 h-4" />
-              New Research Node
+              {commonT("create")}
             </Button>
           </div>
         )}
@@ -125,23 +126,24 @@ export function Sidebar() {
             {mainNav.map((item) => {
               const isActive =
                 pathname === item.href ||
-                (item.href !== "/lab" && pathname.startsWith(item.href));
+                (item.href !== "/(lab)" && pathname.startsWith(item.href.replace("/(lab)", "")));
+              const title = t(item.titleKey);
 
               const navItem = (
                 <Link
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                    "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
                     isActive
                       ? "bg-sidebar-accent text-sidebar-accent-foreground"
                       : "text-sidebar-foreground hover:bg-sidebar-accent/50"
                   )}
                 >
                   <item.icon className="w-5 h-5 shrink-0" />
-                  {!isCollapsed && <span>{item.title}</span>}
+                  {!isCollapsed && <span>{title}</span>}
                   {!isCollapsed && item.badge && (
-                    <span className="ml-auto text-xs bg-primary text-primary-foreground px-1.5 py-0.5 rounded-full">
+                    <span className="ml-auto text-xs bg-accent-primary text-primary-foreground px-1.5 py-0.5 rounded-full">
                       {item.badge}
                     </span>
                   )}
@@ -152,7 +154,7 @@ export function Sidebar() {
                 return (
                   <Tooltip key={item.href}>
                     <TooltipTrigger asChild>{navItem}</TooltipTrigger>
-                    <TooltipContent side="right">{item.title}</TooltipContent>
+                    <TooltipContent side="right">{title}</TooltipContent>
                   </Tooltip>
                 );
               }
@@ -170,20 +172,20 @@ export function Sidebar() {
                 </h3>
                 <nav className="space-y-1">
                   {section.items.map((item) => {
-                    const isActive = pathname === item.href;
+                    const isActive = pathname.includes(item.href.replace("/(lab)", ""));
                     return (
                       <Link
                         key={item.href}
                         href={item.href}
                         className={cn(
-                          "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
+                          "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
                           isActive
                             ? "bg-sidebar-accent text-sidebar-accent-foreground"
                             : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
                         )}
                       >
                         <item.icon className="w-4 h-4 shrink-0" />
-                        <span>{item.title}</span>
+                        <span>{item.titleKey}</span>
                       </Link>
                     );
                   })}

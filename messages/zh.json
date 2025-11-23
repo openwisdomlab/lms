@@ -1,0 +1,178 @@
+{
+  "metadata": {
+    "title": "NextGen LMS - 分布式研究与学习平台",
+    "description": "新一代学习平台，融合挑战式学习、分布式研究与知识管理。"
+  },
+  "common": {
+    "loading": "加载中...",
+    "error": "发生错误",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "create": "创建",
+    "search": "搜索",
+    "settings": "设置",
+    "logout": "退出登录",
+    "login": "登录",
+    "signup": "注册"
+  },
+  "nav": {
+    "home": "首页",
+    "missionControl": "任务控制台",
+    "missions": "任务",
+    "workspace": "工作区",
+    "knowledge": "知识库",
+    "teams": "团队",
+    "events": "活动",
+    "learn": "学习"
+  },
+  "header": {
+    "search": "搜索任何内容...",
+    "notifications": "通知",
+    "profile": "个人资料",
+    "theme": {
+      "light": "浅色",
+      "dark": "深色",
+      "system": "跟随系统"
+    },
+    "language": {
+      "en": "英文",
+      "zh": "中文"
+    }
+  },
+  "landing": {
+    "hero": {
+      "title": "研究·协作·发现",
+      "subtitle": "面向分布式研究与知识综合的新一代平台",
+      "cta": "开始探索"
+    },
+    "features": {
+      "challenges": {
+        "title": "挑战式学习",
+        "description": "解决循序渐进的真实科学问题"
+      },
+      "collaboration": {
+        "title": "实时协作",
+        "description": "与全球研究者协同工作"
+      },
+      "knowledge": {
+        "title": "知识图谱",
+        "description": "连接并可视化研究关系"
+      },
+      "ai": {
+        "title": "AI 研究助手",
+        "description": "获取智能建议与冲突检测"
+      }
+    }
+  },
+  "missionControl": {
+    "title": "任务控制台",
+    "welcome": "欢迎回来",
+    "stats": {
+      "xp": "总经验值",
+      "level": "等级",
+      "streak": "连续天数",
+      "nodes": "研究节点"
+    },
+    "activity": {
+      "title": "最近活动",
+      "empty": "暂无活动记录"
+    }
+  },
+  "missions": {
+    "title": "挑战中心",
+    "subtitle": "选择一个科学挑战，开启你的研究之旅",
+    "difficulty": {
+      "beginner": "入门",
+      "intermediate": "进阶",
+      "advanced": "高级",
+      "expert": "专家",
+      "frontier": "前沿"
+    },
+    "status": {
+      "available": "可用",
+      "in_progress": "进行中",
+      "completed": "已完成"
+    }
+  },
+  "workspace": {
+    "title": "研究工作区",
+    "subtitle": "你的个人研究环境",
+    "newNode": "新建研究节点",
+    "nodeTypes": {
+      "hypothesis": "假设",
+      "experiment": "实验",
+      "data": "数据",
+      "analysis": "分析",
+      "synthesis": "综合",
+      "literature": "文献",
+      "note": "笔记",
+      "question": "问题"
+    }
+  },
+  "knowledge": {
+    "title": "知识库",
+    "subtitle": "探索互联的研究网络",
+    "graph": "知识图谱",
+    "list": "列表视图",
+    "filters": {
+      "all": "全部",
+      "mine": "我的节点",
+      "shared": "已分享",
+      "published": "已发布"
+    }
+  },
+  "teams": {
+    "title": "研究团队",
+    "subtitle": "与研究伙伴协作",
+    "create": "创建团队",
+    "join": "加入团队",
+    "members": "成员",
+    "projects": "项目"
+  },
+  "events": {
+    "title": "活动",
+    "subtitle": "线上线下融合学习体验",
+    "upcoming": "即将开始",
+    "past": "已结束",
+    "register": "报名"
+  },
+  "learn": {
+    "title": "微学习",
+    "subtitle": "通过间隔重复构建知识体系",
+    "dailyReview": "每日复习",
+    "progress": "进度",
+    "mastery": {
+      "novice": "新手",
+      "familiar": "熟悉",
+      "proficient": "精通",
+      "mastered": "掌握"
+    }
+  },
+  "editor": {
+    "placeholder": "开始输入，或按 '/' 调出命令菜单...",
+    "commands": {
+      "heading1": "一级标题",
+      "heading2": "二级标题",
+      "heading3": "三级标题",
+      "bulletList": "无序列表",
+      "numberedList": "有序列表",
+      "taskList": "任务列表",
+      "quote": "引用",
+      "code": "代码块",
+      "math": "数学公式",
+      "hypothesis": "假设模块",
+      "methodology": "方法模块",
+      "data": "数据模块",
+      "conclusion": "结论模块"
+    }
+  },
+  "ai": {
+    "assistant": "AI 助手",
+    "analyzing": "分析中...",
+    "suggestions": "建议",
+    "conflicts": "潜在冲突",
+    "similar": "相似研究"
+  }
+}

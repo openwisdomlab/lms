@@ -102,7 +102,7 @@ export function useKnowledgeGraph(options: UseKnowledgeGraphOptions = {}): UseKn
           forkCount: node.fork_count || undefined,
           citationCount: node.citation_count || undefined,
           isVerified: node.is_verified || undefined,
-          author: (node.profiles as { display_name: string } | null)?.display_name || undefined,
+          author: (Array.isArray(node.profiles) ? node.profiles[0]?.display_name : (node.profiles as { display_name?: string } | null)?.display_name) || undefined,
           createdAt: node.created_at,
           isCurrent: node.id === nodeId,
         }));
@@ -174,7 +174,7 @@ export function useKnowledgeGraph(options: UseKnowledgeGraphOptions = {}): UseKn
           forkCount: node.fork_count || undefined,
           citationCount: node.citation_count || undefined,
           isVerified: node.is_verified || undefined,
-          author: (node.profiles as { display_name: string } | null)?.display_name || undefined,
+          author: (Array.isArray(node.profiles) ? node.profiles[0]?.display_name : (node.profiles as { display_name?: string } | null)?.display_name) || undefined,
           createdAt: node.created_at,
         }));
 

@@ -26,7 +26,7 @@ export interface SuggestionProps {
   query: string;
   items: SlashCommandItem[];
   command: (item: SlashCommandItem) => void;
-  clientRect: (() => DOMRect | null) | null;
+  clientRect?: (() => DOMRect | null) | null;
   editor: Editor;
   range: Range;
 }
