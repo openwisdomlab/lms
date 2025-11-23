@@ -76,7 +76,7 @@ export function ScienceEditor({
           query: string;
           items: SlashCommandItem[];
           command: (item: SlashCommandItem) => void;
-          clientRect: (() => DOMRect | null) | null;
+          clientRect?: (() => DOMRect | null) | null;
         }) => {
           component = document.createElement("div");
           reactRoot = createRoot(component);
@@ -106,7 +106,7 @@ export function ScienceEditor({
           query: string;
           items: SlashCommandItem[];
           command: (item: SlashCommandItem) => void;
-          clientRect: (() => DOMRect | null) | null;
+          clientRect?: (() => DOMRect | null) | null;
         }) => {
           if (reactRoot && component) {
             reactRoot.render(
@@ -170,7 +170,7 @@ export function ScienceEditor({
           query: string;
           items: CitationItem[];
           command: (item: { id: string; label: string }) => void;
-          clientRect: (() => DOMRect | null) | null;
+          clientRect?: (() => DOMRect | null) | null;
         }) => {
           component = document.createElement("div");
           reactRoot = createRoot(component);
@@ -201,7 +201,7 @@ export function ScienceEditor({
           query: string;
           items: CitationItem[];
           command: (item: { id: string; label: string }) => void;
-          clientRect: (() => DOMRect | null) | null;
+          clientRect?: (() => DOMRect | null) | null;
         }) => {
           if (reactRoot && component) {
             reactRoot.render(
@@ -287,11 +287,7 @@ export function ScienceEditor({
           class: "not-prose",
         },
       }),
-      Mathematics.configure({
-        HTMLAttributes: {
-          class: "math-block",
-        },
-      }),
+      Mathematics,
       AIBlock,
       Citation.configure({
         suggestion: citationSuggestion,

@@ -1,0 +1,178 @@
+{
+  "metadata": {
+    "title": "NextGen LMS - Distributed Research & Learning Platform",
+    "description": "A next-generation learning platform combining challenge-based learning, distributed research, and knowledge management."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "settings": "Settings",
+    "logout": "Log out",
+    "login": "Log in",
+    "signup": "Sign up"
+  },
+  "nav": {
+    "home": "Home",
+    "missionControl": "Mission Control",
+    "missions": "Missions",
+    "workspace": "Workspace",
+    "knowledge": "Knowledge",
+    "teams": "Teams",
+    "events": "Events",
+    "learn": "Learn"
+  },
+  "header": {
+    "search": "Search anything...",
+    "notifications": "Notifications",
+    "profile": "Profile",
+    "theme": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "language": {
+      "en": "English",
+      "zh": "Chinese"
+    }
+  },
+  "landing": {
+    "hero": {
+      "title": "Research. Collaborate. Discover.",
+      "subtitle": "A next-generation platform for distributed research and knowledge synthesis",
+      "cta": "Get Started"
+    },
+    "features": {
+      "challenges": {
+        "title": "Challenge-Based Learning",
+        "description": "Tackle real scientific problems with progressive difficulty"
+      },
+      "collaboration": {
+        "title": "Real-time Collaboration",
+        "description": "Work together with researchers worldwide"
+      },
+      "knowledge": {
+        "title": "Knowledge Graph",
+        "description": "Connect and visualize research relationships"
+      },
+      "ai": {
+        "title": "AI Research Assistant",
+        "description": "Get intelligent suggestions and conflict detection"
+      }
+    }
+  },
+  "missionControl": {
+    "title": "Mission Control",
+    "welcome": "Welcome back",
+    "stats": {
+      "xp": "Total XP",
+      "level": "Level",
+      "streak": "Day Streak",
+      "nodes": "Research Nodes"
+    },
+    "activity": {
+      "title": "Recent Activity",
+      "empty": "No recent activity"
+    }
+  },
+  "missions": {
+    "title": "Challenge Hub",
+    "subtitle": "Select a scientific challenge to begin your research journey",
+    "difficulty": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "expert": "Expert",
+      "frontier": "Frontier"
+    },
+    "status": {
+      "available": "Available",
+      "in_progress": "In Progress",
+      "completed": "Completed"
+    }
+  },
+  "workspace": {
+    "title": "Research Workspace",
+    "subtitle": "Your personal research environment",
+    "newNode": "New Research Node",
+    "nodeTypes": {
+      "hypothesis": "Hypothesis",
+      "experiment": "Experiment",
+      "data": "Data",
+      "analysis": "Analysis",
+      "synthesis": "Synthesis",
+      "literature": "Literature",
+      "note": "Note",
+      "question": "Question"
+    }
+  },
+  "knowledge": {
+    "title": "Knowledge Base",
+    "subtitle": "Explore the connected research network",
+    "graph": "Knowledge Graph",
+    "list": "List View",
+    "filters": {
+      "all": "All",
+      "mine": "My Nodes",
+      "shared": "Shared",
+      "published": "Published"
+    }
+  },
+  "teams": {
+    "title": "Research Teams",
+    "subtitle": "Collaborate with fellow researchers",
+    "create": "Create Team",
+    "join": "Join Team",
+    "members": "Members",
+    "projects": "Projects"
+  },
+  "events": {
+    "title": "Events",
+    "subtitle": "Online-Merge-Offline learning experiences",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "register": "Register"
+  },
+  "learn": {
+    "title": "Micro-Learning",
+    "subtitle": "Build knowledge through spaced repetition",
+    "dailyReview": "Daily Review",
+    "progress": "Progress",
+    "mastery": {
+      "novice": "Novice",
+      "familiar": "Familiar",
+      "proficient": "Proficient",
+      "mastered": "Mastered"
+    }
+  },
+  "editor": {
+    "placeholder": "Start writing or type '/' for commands...",
+    "commands": {
+      "heading1": "Heading 1",
+      "heading2": "Heading 2",
+      "heading3": "Heading 3",
+      "bulletList": "Bullet List",
+      "numberedList": "Numbered List",
+      "taskList": "Task List",
+      "quote": "Quote",
+      "code": "Code Block",
+      "math": "Math Block",
+      "hypothesis": "Hypothesis Block",
+      "methodology": "Methodology Block",
+      "data": "Data Block",
+      "conclusion": "Conclusion Block"
+    }
+  },
+  "ai": {
+    "assistant": "AI Assistant",
+    "analyzing": "Analyzing...",
+    "suggestions": "Suggestions",
+    "conflicts": "Potential Conflicts",
+    "similar": "Similar Research"
+  }
+}

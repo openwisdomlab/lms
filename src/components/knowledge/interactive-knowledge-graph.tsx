@@ -125,6 +125,7 @@ const edgeTypeConfig: Record<string, { color: string; style: "solid" | "dashed";
 function ResearchNode({ data, selected }: NodeProps) {
   const config = nodeTypeConfig[data.type as string] || nodeTypeConfig.note;
   const Icon = config.icon;
+  const isCurrent = Boolean(data.isCurrent);
 
   return (
     <div
@@ -132,12 +133,12 @@ function ResearchNode({ data, selected }: NodeProps) {
         "relative px-4 py-3 rounded-xl shadow-lg transition-all duration-200",
         "min-w-[180px] max-w-[280px]",
         selected && "ring-2 ring-offset-2 ring-offset-background",
-        data.isCurrent && "ring-2 ring-primary ring-offset-2"
+        isCurrent && "ring-2 ring-primary ring-offset-2"
       )}
       style={{
         backgroundColor: config.bgColor,
         borderWidth: 2,
-        borderColor: selected || data.isCurrent ? config.color : `${config.color}80`,
+        borderColor: selected || isCurrent ? config.color : `${config.color}80`,
       }}
     >
       {/* Handles for connections */}
@@ -178,18 +179,18 @@ function ResearchNode({ data, selected }: NodeProps) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <h3 className="font-semibold text-sm text-foreground truncate">
-              {data.title as string}
+              {String(data.title || "")}
             </h3>
-            {data.isVerified && (
+            {Boolean(data.isVerified) && (
               <Badge variant="secondary" className="text-xs px-1 py-0 shrink-0">
                 Verified
               </Badge>
             )}
           </div>
 
-          {data.summary && (
+          {typeof data.summary === "string" && data.summary && (
             <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-              {data.summary as string}
+              {data.summary}
             </p>
           )}
 
@@ -227,7 +228,7 @@ function ResearchNode({ data, selected }: NodeProps) {
       </div>
 
       {/* Current node indicator */}
-      {data.isCurrent && (
+      {isCurrent && (
         <div className="absolute -top-2 -right-2 w-4 h-4 bg-primary rounded-full animate-pulse" />
       )}
     </div>
@@ -390,7 +391,7 @@ function InteractiveKnowledgeGraphInner({
       }));
   }, [inputNodes, positions, currentNodeId, visibleTypes]);
 
-  const initialEdges: Edge[] = useMemo(() => {
+  const initialEdges = useMemo(() => {
     const visibleNodeIds = new Set(initialNodes.map((n) => n.id));
     return inputEdges
       .filter(
@@ -419,7 +420,7 @@ function InteractiveKnowledgeGraphInner({
           label: edge.label || config.label,
           labelStyle: { fill: config.color, fontSize: 10 },
           labelBgStyle: { fill: "var(--background)", fillOpacity: 0.8 },
-          data: edge,
+          data: { ...edge } as Record<string, unknown>,
         };
       });
   }, [inputEdges, initialNodes, visibleEdgeTypes]);

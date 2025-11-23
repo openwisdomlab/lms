@@ -105,7 +105,7 @@ export function useRealtimeCollaboration({
         const activeUsers: ActiveCollaborator[] = Object.entries(state)
           .filter(([key]) => key !== userId)
           .map(([key, presences]) => {
-            const presence = (presences as Array<{
+            const presence = (presences as unknown as Array<{
               user_id: string;
               display_name: string;
               avatar_url?: string;

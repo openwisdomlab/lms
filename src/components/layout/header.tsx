@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/i18n/navigation";
+import { useTranslations, useLocale } from "next-intl";
 import {
   Bell,
   Settings,
@@ -26,27 +27,35 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
-
-const pathTitles: Record<string, string> = {
-  "/lab": "Mission Control",
-  "/lab/missions": "Challenges",
-  "/lab/workspace": "My Workspace",
-  "/lab/knowledge": "Knowledge Base",
-  "/lab/teams": "Teams",
-  "/lab/workspace/nodes": "Research Nodes",
-  "/lab/workspace/artifacts": "Artifacts",
-  "/lab/workspace/analytics": "Analytics",
-};
+import { LanguageSwitcher } from "./language-switcher";
+import { ThemeSwitcher } from "./theme-switcher";
+import { Separator } from "@/components/ui/separator";
 
 export function Header() {
   const pathname = usePathname();
+  const locale = useLocale();
+  const t = useTranslations("nav");
 
-  // Generate breadcrumbs
+  // Path titles mapping with i18n support
+  const getPathTitle = (path: string): string => {
+    const pathMap: Record<string, string> = {
+      "": t("missionControl"),
+      "missions": t("missions"),
+      "workspace": t("workspace"),
+      "knowledge": t("knowledge"),
+      "teams": t("teams"),
+      "events": t("events"),
+      "learn": t("learn"),
+    };
+    return pathMap[path] || path.charAt(0).toUpperCase() + path.slice(1);
+  };
+
+  // Generate breadcrumbs - skip locale segment
   const pathSegments = pathname.split("/").filter(Boolean);
   const breadcrumbs = pathSegments.map((segment, index) => {
     const href = "/" + pathSegments.slice(0, index + 1).join("/");
     return {
-      title: pathTitles[href] || segment.charAt(0).toUpperCase() + segment.slice(1),
+      title: getPathTitle(segment),
       href,
       isLast: index === pathSegments.length - 1,
     };
@@ -155,6 +164,15 @@ export function Header() {
               </TooltipTrigger>
               <TooltipContent>Settings</TooltipContent>
             </Tooltip>
+
+            {/* Separator */}
+            <Separator orientation="vertical" className="h-6 mx-1" />
+
+            {/* Theme Switcher */}
+            <ThemeSwitcher />
+
+            {/* Language Switcher */}
+            <LanguageSwitcher />
           </div>
         </div>
       </header>

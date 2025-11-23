@@ -40,8 +40,9 @@ export const Citation = Mention.extend({
       HTMLAttributes: {
         class: "citation",
       },
-      renderLabel({ node }: { node: { attrs: { label: string } } }) {
-        return `@${node.attrs.label}`;
+      renderLabel(props: { node: { attrs: Record<string, unknown> } }) {
+        const label = props.node.attrs.label as string | undefined;
+        return label ? `@${label}` : "@";
       },
       suggestion: {
         char: "@",
