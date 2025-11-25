@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import {
   Target,
   Clock,
@@ -175,7 +175,7 @@ export default function MissionsPage() {
               .map((challenge) => (
                 <Link
                   key={challenge.id}
-                  href={`/lab/missions/${challenge.id}`}
+                  href={`/(lab)/missions`}
                   className="flex items-center justify-between"
                 >
                   <div className="space-y-2 flex-1">
@@ -239,7 +239,7 @@ export default function MissionsPage() {
                     {challenge.participants}
                   </span>
                 </div>
-                <Link href={`/lab/missions/${challenge.id}`}>
+                <Link href="/(lab)/missions">
                   <Button size="sm" variant="outline">
                     {challenge.status === "in_progress"
                       ? "Continue"

@@ -58,9 +58,9 @@ const secondaryNav: NavSection[] = [
   {
     title: "Research",
     items: [
-      { titleKey: "My Nodes", href: "/(lab)/workspace/nodes", icon: FileText },
-      { titleKey: "Artifacts", href: "/(lab)/workspace/artifacts", icon: BookOpen },
-      { titleKey: "Analytics", href: "/(lab)/workspace/analytics", icon: BarChart3 },
+      { titleKey: "My Nodes", href: "/(lab)/workspace", icon: FileText },
+      { titleKey: "Knowledge", href: "/(lab)/knowledge", icon: BookOpen },
+      { titleKey: "Missions", href: "/(lab)/missions", icon: BarChart3 },
     ],
   },
 ];

@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import {
   Users,
   Plus,
@@ -197,7 +197,7 @@ export default function TeamsPage() {
                           {team.activeNodes} nodes
                         </span>
                       </div>
-                      <Link href={`/lab/teams/${team.slug}`}>
+                      <Link href="/(lab)/teams">
                         <Button size="sm" variant="outline">
                           View Team
                         </Button>
