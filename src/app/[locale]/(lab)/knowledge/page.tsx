@@ -21,7 +21,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InteractiveKnowledgeGraph, type KnowledgeNode, type KnowledgeEdge } from "@/components/knowledge/interactive-knowledge-graph";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 
 // Mock data for public knowledge base
 const trendingNodes = [
@@ -203,7 +203,7 @@ export default function KnowledgeBasePage() {
   };
 
   const handleNodeDoubleClick = (node: KnowledgeNode) => {
-    router.push(`/research/${node.id}`);
+    router.push(`/(lab)/research/${node.id}`);
   };
 
   return (

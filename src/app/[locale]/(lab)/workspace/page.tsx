@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import {
   Plus,
   FileText,
@@ -185,7 +185,7 @@ export default function WorkspacePage() {
               {researchNodes.map((node) => {
                 const Icon = nodeTypeIcons[node.type] || FileText;
                 return (
-                  <Link key={node.id} href={`/lab/workspace/nodes/${node.id}`}>
+                  <Link key={node.id} href={`/(lab)/research/${node.id}`}>
                     <Card className="hover:shadow-md transition-all hover:border-primary/50 cursor-pointer h-full">
                       <CardContent className="p-4">
                         <div className="flex items-start justify-between mb-3">
@@ -250,7 +250,7 @@ export default function WorkspacePage() {
               {researchNodes.map((node) => {
                 const Icon = nodeTypeIcons[node.type] || FileText;
                 return (
-                  <Link key={node.id} href={`/lab/workspace/nodes/${node.id}`}>
+                  <Link key={node.id} href={`/(lab)/research/${node.id}`}>
                     <Card className="hover:shadow-sm transition-all hover:border-primary/50 cursor-pointer">
                       <CardContent className="p-4 flex items-center gap-4">
                         <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">

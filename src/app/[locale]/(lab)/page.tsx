@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import {
   Target,
   FlaskConical,
@@ -143,7 +143,7 @@ export default function MissionControlPage() {
                   <Award className="w-4 h-4 text-yellow-500" />
                   <span>{activeChallenge.xpReward} XP on completion</span>
                 </div>
-                <Link href="/lab/missions/mars-soil">
+                <Link href="/(lab)/missions">
                   <Button size="sm" className="gap-1">
                     Continue
                     <ArrowRight className="w-4 h-4" />
@@ -177,7 +177,7 @@ export default function MissionControlPage() {
                 </p>
               </div>
             ))}
-            <Link href="/lab/workspace/badges">
+            <Link href="/(lab)/workspace">
               <Button variant="ghost" size="sm" className="w-full mt-2">
                 View All Badges
               </Button>
@@ -191,7 +191,7 @@ export default function MissionControlPage() {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg">Recent Research Nodes</CardTitle>
-            <Link href="/lab/workspace/nodes">
+            <Link href="/(lab)/workspace">
               <Button variant="ghost" size="sm" className="gap-1">
                 View All
                 <ArrowRight className="w-4 h-4" />
@@ -204,7 +204,7 @@ export default function MissionControlPage() {
             {recentNodes.map((node) => (
               <Link
                 key={node.id}
-                href={`/lab/workspace/nodes/${node.id}`}
+                href={`/(lab)/research/${node.id}`}
                 className="flex items-center justify-between p-3 rounded-lg border hover:bg-accent/50 transition-colors"
               >
                 <div className="flex items-center gap-3">
