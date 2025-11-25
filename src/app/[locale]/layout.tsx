@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { routing, type Locale } from "@/i18n/routing";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { ConvexClientProvider } from "@/components/providers/convex-provider";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -47,11 +48,13 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className="font-sans antialiased">
-        <ThemeProvider>
-          <NextIntlClientProvider messages={messages}>
-            {children}
-          </NextIntlClientProvider>
-        </ThemeProvider>
+        <ConvexClientProvider>
+          <ThemeProvider>
+            <NextIntlClientProvider messages={messages}>
+              {children}
+            </NextIntlClientProvider>
+          </ThemeProvider>
+        </ConvexClientProvider>
       </body>
     </html>
   );
