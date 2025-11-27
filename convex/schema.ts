@@ -306,8 +306,7 @@ export default defineSchema({
     sourceType: v.optional(v.string()),
     sourceId: v.optional(v.string()), // Store as string to handle different ID types
   })
-    .index("by_user", ["userId"])
-    .index("by_user_date", ["userId"]),
+    .index("by_user", ["userId"]),
 
   // ===========================================================================
   // PROGRESS TRACKING
