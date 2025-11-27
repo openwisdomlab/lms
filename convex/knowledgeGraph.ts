@@ -1,5 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { Id } from "./_generated/dataModel";
 
 // ===========================================================================
 // KNOWLEDGE LINK QUERIES
@@ -130,7 +131,7 @@ export const getGraphNeighbors = query({
     const nodes: any[] = [];
     const edges: any[] = [];
 
-    async function traverse(currentNodeId: string, currentDepth: number) {
+    async function traverse(currentNodeId: Id<"researchNodes">, currentDepth: number) {
       if (
         currentDepth > maxDepth ||
         visited.has(currentNodeId) ||
@@ -141,7 +142,7 @@ export const getGraphNeighbors = query({
 
       visited.add(currentNodeId);
 
-      const node = await ctx.db.get(currentNodeId as any);
+      const node = await ctx.db.get(currentNodeId);
       if (!node) return;
 
       nodes.push({
@@ -156,13 +157,13 @@ export const getGraphNeighbors = query({
         // Get outgoing links
         const outgoing = await ctx.db
           .query("knowledgeLinks")
-          .withIndex("by_source", (q) => q.eq("sourceNodeId", currentNodeId as any))
+          .withIndex("by_source", (q) => q.eq("sourceNodeId", currentNodeId))
           .collect();
 
         // Get incoming links
         const incoming = await ctx.db
           .query("knowledgeLinks")
-          .withIndex("by_target", (q) => q.eq("targetNodeId", currentNodeId as any))
+          .withIndex("by_target", (q) => q.eq("targetNodeId", currentNodeId))
           .collect();
 
         for (const link of outgoing) {
