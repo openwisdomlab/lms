@@ -1,27 +1,14 @@
 import { type NextRequest } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "@/i18n/routing";
-import { updateSession } from "@/lib/supabase/middleware";
 
 // Create the i18n middleware
 const intlMiddleware = createMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
-  // First, handle i18n routing
-  const intlResponse = intlMiddleware(request);
-
-  // Then, update the Supabase session (for auth token refresh)
-  // We need to merge the responses properly
-  const supabaseResponse = await updateSession(request);
-
-  // Copy any cookies set by Supabase to the intl response
-  supabaseResponse.cookies.getAll().forEach((cookie) => {
-    intlResponse.cookies.set(cookie.name, cookie.value, {
-      ...cookie,
-    });
-  });
-
-  return intlResponse;
+  // Handle i18n routing
+  // Note: Auth is now handled by Convex, not Supabase middleware
+  return intlMiddleware(request);
 }
 
 export const config = {
