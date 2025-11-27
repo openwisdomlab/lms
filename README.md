@@ -44,10 +44,10 @@ Unlike traditional course-based LMS platforms, NextGen LMS is designed as a **di
 ### Backend & Database
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| Supabase | - | PostgreSQL, Auth, RLS, Realtime, Storage |
-| @supabase/supabase-js | 2.47.0 | Database client |
-| @supabase/ssr | 0.5.2 | Server-side auth |
-| pgvector | - | Vector embeddings (1536-dim) |
+| Convex | 1.29.3 | Real-time database, auth, functions |
+| @convex-dev/auth | 0.0.90 | Authentication with OAuth providers |
+
+> **Note:** This project was migrated from Supabase to Convex. Legacy Supabase files remain in the repository for reference but are deprecated.
 
 ### AI & State Management
 | Technology | Version | Purpose |
@@ -68,7 +68,7 @@ Unlike traditional course-based LMS platforms, NextGen LMS is designed as a **di
 - **Version Control**: Node versions with snapshots, change tracking, diff support
 - **Publication Workflow**: Draft → Submit → Review → Publish
 - **Peer Review System**: Review assignments, notes, scores, AI review results
-- **Real-time Collaboration**: Editing sessions, cursor tracking via Supabase Realtime
+- **Real-time Collaboration**: Editing sessions, cursor tracking via Convex real-time
 - **AI Research Copilot**: Conflict detection, similar research discovery, methodology suggestions
 - **Vector Search**: pgvector embeddings for semantic search
 
@@ -89,7 +89,7 @@ Unlike traditional course-based LMS platforms, NextGen LMS is designed as a **di
 
 - Node.js 18+
 - npm or yarn
-- Supabase account
+- Convex account (https://convex.dev)
 
 ### Installation
 
@@ -111,19 +111,24 @@ cp .env.local.example .env.local
 
 Edit `.env.local` with your credentials:
 ```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+# Convex (Required)
+NEXT_PUBLIC_CONVEX_URL=your_convex_deployment_url
+CONVEX_DEPLOY_KEY=your_convex_deploy_key
+
+# OAuth (Optional)
+AUTH_GITHUB_ID=your_github_client_id
+AUTH_GITHUB_SECRET=your_github_client_secret
+
+# OpenAI (for AI features)
 OPENAI_API_KEY=your_openai_api_key
+
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-4. **Set up the database:**
-   - Create a new Supabase project
-   - Run schemas in order in the SQL editor:
-     1. `supabase/schema.sql` - Core foundation
-     2. `supabase/schema-v2-upgrade.sql` - Git-Lite versioning
-     3. `supabase/schema-v3-omo-microlearning.sql` - OMO & micro-learning
-     4. `supabase/schema-v4-git-science.sql` - Knowledge graph enhancements
+4. **Set up Convex:**
+   - Create a new Convex project at https://dashboard.convex.dev
+   - Run `npx convex dev` to initialize and sync the schema
+   - The schema is defined in `convex/schema.ts`
 
 5. **Run the development server:**
 ```bash
@@ -145,9 +150,21 @@ Open [http://localhost:3000](http://localhost:3000) to see the app.
 
 ```
 lms/
+├── convex/                        # Convex backend (PRIMARY)
+│   ├── schema.ts                  # Database schema definition
+│   ├── profiles.ts                # User profile functions
+│   ├── challenges.ts              # Challenge functions
+│   ├── researchNodes.ts           # Research node functions
+│   ├── knowledgeGraph.ts          # Knowledge graph functions
+│   ├── gamification.ts            # XP, badges, progress
+│   ├── collaboration.ts           # Teams & real-time collaboration
+│   ├── events.ts                  # OMO events management
+│   ├── microlearning.ts           # Learning units & paths
+│   ├── auth.ts                    # Authentication config
+│   └── http.ts                    # HTTP routes for auth
 ├── src/
 │   ├── app/                       # Next.js App Router
-│   │   ├── (lab)/                 # Authenticated routes (route group)
+│   │   ├── [locale]/(lab)/        # Authenticated routes (route group)
 │   │   │   ├── layout.tsx         # Lab layout with sidebar
 │   │   │   ├── page.tsx           # Mission Control dashboard
 │   │   │   ├── missions/          # Challenge Hub
@@ -157,24 +174,24 @@ lms/
 │   │   │   ├── events/            # OMO events management
 │   │   │   ├── learn/             # Micro-learning interface
 │   │   │   └── research/[nodeId]/ # Research node editor
-│   │   ├── page.tsx               # Public landing page
-│   │   └── layout.tsx             # Root layout
+│   │   ├── [locale]/page.tsx      # Public landing page
+│   │   └── [locale]/layout.tsx    # Locale layout with providers
 │   ├── components/
 │   │   ├── editor/                # Tiptap editor system
 │   │   ├── ui/                    # shadcn/ui components (17+)
 │   │   ├── layout/                # Header, sidebar, panels
+│   │   ├── providers/             # React providers (Convex, Theme)
 │   │   ├── research/              # Collaboration components
 │   │   ├── knowledge/             # Knowledge graph visualization
 │   │   └── events/                # Event management UI
 │   ├── hooks/                     # Custom React hooks
 │   ├── lib/                       # Utilities and configs
-│   │   ├── supabase/              # Supabase client setup
-│   │   └── utils.ts               # Utility functions
+│   │   └── utils.ts               # Utility functions (cn, etc.)
 │   └── types/                     # TypeScript definitions
-│       ├── database.ts            # v1 base types
+│       ├── database.ts            # v1 base types (legacy reference)
 │       ├── database-v2.ts         # v2 Git-Lite types
 │       └── database-v3.ts         # v3 OMO/Micro-learning types
-├── supabase/                      # Database schemas
+├── supabase/                      # [DEPRECATED] Legacy SQL schemas
 ├── public/                        # Static assets
 └── docs/                          # Documentation
 ```
@@ -235,18 +252,23 @@ lms/
 
 #### Component Structure
 ```typescript
-// Server Component (default)
-export default async function Page() {
-  const supabase = await createClient()
-  const { data } = await supabase.from('table').select()
-  return <div>{/* render data */}</div>
+// Client Component with Convex (most common pattern)
+"use client"
+import { useQuery, useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+
+export function ResearchNodeViewer({ nodeId }: { nodeId: Id<"researchNodes"> }) {
+  // Data automatically updates in real-time
+  const node = useQuery(api.researchNodes.getById, { id: nodeId });
+  const updateNode = useMutation(api.researchNodes.update);
+
+  if (!node) return <Loading />;
+  return <div>{node.title}</div>
 }
 
-// Client Component (when needed)
-"use client"
-export function InteractiveComponent() {
-  const [state, setState] = useState()
-  return <div>{/* interactive content */}</div>
+// Server Component (for static content)
+export default async function StaticPage() {
+  return <div>{/* static content */}</div>
 }
 ```
 
@@ -261,10 +283,10 @@ export function InteractiveComponent() {
 - **Feature folders**: Group related components in feature directories
 
 #### 2. Database Rules
-- **Schema versioning**: Add new tables/columns to appropriate `schema-v*.sql` file
-- **Always include RLS**: Every table must have Row-Level Security policies
-- **Index performance-critical columns**: Add indexes for frequently queried fields
-- **Update types**: TypeScript types must match schema changes in `src/types/`
+- **Schema definition**: Add new tables to `convex/schema.ts`
+- **Define indexes**: Add indexes in table definitions for efficient queries
+- **Authorization**: Add function-level auth checks in Convex functions
+- **Types auto-generated**: Types are automatically generated by Convex in `convex/_generated/`
 
 #### 3. Styling Rules
 - **Tailwind utilities only**: No custom CSS unless absolutely necessary
@@ -275,8 +297,8 @@ export function InteractiveComponent() {
 #### 4. API & Security Rules
 - **Never commit secrets**: Use `.env.local` for sensitive values
 - **Validate all input**: Use Zod schemas for user input validation
-- **Use parameterized queries**: Supabase handles this, never use raw SQL
-- **Check permissions**: Verify user authorization before operations
+- **Convex validators**: Use Convex's built-in argument validators in functions
+- **Check permissions**: Verify user authorization with `ctx.auth.getUserIdentity()`
 
 #### 5. Git Workflow Rules
 - **Conventional commits**: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`
@@ -285,7 +307,7 @@ export function InteractiveComponent() {
 
 #### 6. Testing Rules
 - **Test critical paths**: Auth flows, data mutations, complex calculations
-- **Mock external services**: Supabase, OpenAI calls should be mocked
+- **Mock external services**: Convex, OpenAI calls should be mocked
 - **Component testing**: Use React Testing Library for UI tests
 
 #### 7. Performance Rules
@@ -306,15 +328,22 @@ The Tiptap-based Science Editor has specific patterns:
 // 4. Create node-view if custom rendering needed
 ```
 
-### Database Migrations
+### Database Schema Changes
 
-```sql
--- Always include in migration files:
--- 1. CREATE TABLE with proper types
--- 2. RLS policies for CRUD operations
--- 3. Indexes for query optimization
--- 4. Triggers for computed fields (if needed)
--- 5. Comments explaining purpose
+```typescript
+// Adding a new table in convex/schema.ts:
+export const newTable = defineTable({
+  field1: v.string(),
+  field2: v.number(),
+  userId: v.id("profiles"),
+})
+  .index("by_user", ["userId"])  // Add indexes for queries
+  .searchIndex("search_field", {  // Optional: search index
+    searchField: "field1",
+  });
+
+// Create functions in convex/newTable.ts
+// with authorization checks using ctx.auth
 ```
 
 ---
@@ -333,8 +362,8 @@ Contributions are welcome! Please follow these steps:
 ### PR Checklist
 
 - [ ] Code follows project conventions
-- [ ] TypeScript types are updated
-- [ ] RLS policies added (if new tables)
+- [ ] TypeScript types generated via `npx convex dev`
+- [ ] Authorization checks added in Convex functions (if new tables)
 - [ ] Tests added/updated
 - [ ] Documentation updated
 - [ ] `npm run lint` passes
@@ -350,7 +379,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 ## Acknowledgments
 
 - [Next.js](https://nextjs.org/) - React framework
-- [Supabase](https://supabase.com/) - Backend platform
+- [Convex](https://convex.dev/) - Real-time backend platform
 - [Tiptap](https://tiptap.dev/) - Rich text editor
 - [shadcn/ui](https://ui.shadcn.com/) - UI components
 - [React Flow](https://reactflow.dev/) - Graph visualization
