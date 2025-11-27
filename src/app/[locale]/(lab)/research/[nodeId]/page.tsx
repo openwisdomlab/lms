@@ -146,17 +146,18 @@ export default function ResearchNodePage() {
   const [showCopilot, setShowCopilot] = useState(false);
 
   const copilot = useResearchCopilot({ autoAnalyze: true });
+  const { updateContext } = copilot;
 
   // Update copilot context when content changes
   useEffect(() => {
     const textContent = JSON.stringify(content);
-    copilot.updateContext({
+    updateContext({
       nodeId,
       nodeType: mockNode.node_type,
       content: textContent,
       hypothesis: mockNode.hypothesis,
     });
-  }, [content, nodeId]);
+  }, [content, nodeId, updateContext]);
 
   const handleSave = async () => {
     setIsSaving(true);

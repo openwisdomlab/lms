@@ -49,24 +49,6 @@ export function useResearchCopilot(options: UseResearchCopilotOptions = {}) {
   const analyzeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const supabase = createClient();
 
-  // Update context (called when editor content changes)
-  const updateContext = useCallback(
-    (newContext: Partial<ResearchContext>) => {
-      setContext((prev) => ({ ...prev, ...newContext }));
-
-      // Debounce auto-analysis
-      if (autoAnalyze && newContext.content) {
-        if (analyzeTimeoutRef.current) {
-          clearTimeout(analyzeTimeoutRef.current);
-        }
-        analyzeTimeoutRef.current = setTimeout(() => {
-          analyzeContent(newContext.content || "");
-        }, analyzeDebounceMs);
-      }
-    },
-    [autoAnalyze, analyzeDebounceMs]
-  );
-
   // Analyze content for conflicts and similar research
   const analyzeContent = useCallback(async (content: string) => {
     if (!content || content.length < 50) return;
@@ -132,6 +114,24 @@ export function useResearchCopilot(options: UseResearchCopilotOptions = {}) {
       setIsAnalyzing(false);
     }
   }, []);
+
+  // Update context (called when editor content changes)
+  const updateContext = useCallback(
+    (newContext: Partial<ResearchContext>) => {
+      setContext((prev) => ({ ...prev, ...newContext }));
+
+      // Debounce auto-analysis
+      if (autoAnalyze && newContext.content) {
+        if (analyzeTimeoutRef.current) {
+          clearTimeout(analyzeTimeoutRef.current);
+        }
+        analyzeTimeoutRef.current = setTimeout(() => {
+          analyzeContent(newContext.content || "");
+        }, analyzeDebounceMs);
+      }
+    },
+    [autoAnalyze, analyzeDebounceMs, analyzeContent]
+  );
 
   // Find similar nodes using vector search
   const findSimilarNodes = useCallback(
@@ -281,7 +281,7 @@ export function useResearchCopilot(options: UseResearchCopilotOptions = {}) {
         setIsAnalyzing(false);
       }
     },
-    [context]
+    []
   );
 
   // Analyze selected text
