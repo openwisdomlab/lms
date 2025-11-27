@@ -46,6 +46,7 @@ export function useRealtimeCollaboration({
   const supabase = createClient();
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
   const lastActivityRef = useRef<number>(Date.now());
+  const sessionIdRef = useRef<string | null>(null);
 
   // Initialize session
   useEffect(() => {
@@ -69,7 +70,9 @@ export function useRealtimeCollaboration({
           .single();
 
         if (error) throw error;
-        setSessionId(session?.id || null);
+        const newSessionId = session?.id || null;
+        setSessionId(newSessionId);
+        sessionIdRef.current = newSessionId;
       } catch (error) {
         console.error("Failed to initialize session:", error);
       }
@@ -79,14 +82,14 @@ export function useRealtimeCollaboration({
 
     // Cleanup session on unmount
     return () => {
-      if (sessionId) {
+      if (sessionIdRef.current) {
         supabase
           .from("editing_sessions")
           .update({ is_active: false, ended_at: new Date().toISOString() })
-          .eq("id", sessionId);
+          .eq("id", sessionIdRef.current);
       }
     };
-  }, [nodeId, userId]);
+  }, [nodeId, userId, supabase]);
 
   // Subscribe to realtime channel
   useEffect(() => {
@@ -162,7 +165,7 @@ export function useRealtimeCollaboration({
     return () => {
       channelRef.current?.unsubscribe();
     };
-  }, [nodeId, userId, userName, userAvatar, onContentUpdate]);
+  }, [nodeId, userId, userName, userAvatar, onContentUpdate, supabase]);
 
   // Update cursor position
   const updateCursor = useCallback(
@@ -231,7 +234,7 @@ export function useRealtimeCollaboration({
     }, 15000);
 
     return () => clearInterval(heartbeatInterval);
-  }, [sessionId]);
+  }, [sessionId, supabase]);
 
   return {
     collaborators,
