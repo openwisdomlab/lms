@@ -19,7 +19,12 @@
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
-    "docker:admin-key": "docker compose exec backend ./generate_admin_key.sh"
+    "docker:admin-key": "docker compose exec backend ./generate_admin_key.sh",
+    "fly:setup": "bash scripts/fly-setup.sh",
+    "fly:deploy": "fly deploy",
+    "fly:logs": "fly logs -a lms-convex-backend",
+    "fly:ssh": "fly ssh console -a lms-convex-backend",
+    "fly:admin-key": "fly ssh console -a lms-convex-backend -C './generate_admin_key.sh'"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.0.0",
