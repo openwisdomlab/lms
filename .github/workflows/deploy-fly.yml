@@ -1,0 +1,104 @@
+# Deploy Convex Backend to Fly.io
+#
+# This workflow deploys the self-hosted Convex backend to Fly.io
+#
+# Required Secrets (set in GitHub repo Settings > Secrets):
+#   FLY_API_TOKEN - Get from: fly tokens create deploy -x 999999h
+#
+# Usage:
+#   1. Go to Actions tab in GitHub
+#   2. Select "Deploy Convex Backend to Fly.io"
+#   3. Click "Run workflow"
+#   4. Choose action: "deploy" (first time) or "get-admin-key" (get key)
+
+name: Deploy Convex Backend to Fly.io
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: true
+        default: 'deploy'
+        type: choice
+        options:
+          - deploy
+          - get-admin-key
+
+env:
+  FLY_APP_NAME: lms-convex-backend
+  FLY_REGION: sjc
+
+jobs:
+  deploy:
+    name: Deploy to Fly.io
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'deploy'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Fly CLI
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Create app if not exists
+        run: |
+          flyctl apps create ${{ env.FLY_APP_NAME }} --org personal 2>/dev/null || echo "App already exists"
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Create volume if not exists
+        run: |
+          if ! flyctl volumes list -a ${{ env.FLY_APP_NAME }} | grep -q "convex_data"; then
+            flyctl volumes create convex_data --region ${{ env.FLY_REGION }} --size 1 --app ${{ env.FLY_APP_NAME }} -y
+          else
+            echo "Volume already exists"
+          fi
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Deploy to Fly.io
+        run: flyctl deploy --app ${{ env.FLY_APP_NAME }} --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Get deployment URL
+        run: |
+          echo "=============================================="
+          echo "✅ DEPLOYMENT SUCCESSFUL!"
+          echo "=============================================="
+          echo ""
+          echo "Backend URL: https://${{ env.FLY_APP_NAME }}.fly.dev"
+          echo ""
+          echo "Next step: Run this workflow again with 'get-admin-key' action"
+          echo "=============================================="
+
+  get-admin-key:
+    name: Get Admin Key
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'get-admin-key'
+
+    steps:
+      - name: Setup Fly CLI
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Generate Admin Key
+        run: |
+          echo "=============================================="
+          echo "🔑 ADMIN KEY"
+          echo "=============================================="
+          echo ""
+          flyctl ssh console -a ${{ env.FLY_APP_NAME }} -C "./generate_admin_key.sh"
+          echo ""
+          echo "=============================================="
+          echo ""
+          echo "📋 Add these to Vercel Environment Variables:"
+          echo ""
+          echo "NEXT_PUBLIC_CONVEX_SELF_HOSTED_URL=https://${{ env.FLY_APP_NAME }}.fly.dev"
+          echo "CONVEX_SELF_HOSTED_URL=https://${{ env.FLY_APP_NAME }}.fly.dev"
+          echo "CONVEX_SELF_HOSTED_ADMIN_KEY=<key-from-above>"
+          echo ""
+          echo "=============================================="
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
