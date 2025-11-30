@@ -1,0 +1,38 @@
+# Convex Self-Hosted Backend
+# Run with: docker compose up
+# See: https://github.com/get-convex/convex-backend/blob/main/self-hosted/README.md
+
+services:
+  backend:
+    image: ghcr.io/get-convex/convex-backend:latest
+    ports:
+      - "3210:3210"  # Backend API
+      - "3211:3211"  # HTTP Actions
+    volumes:
+      - convex_data:/convex_data
+    environment:
+      # For production, set these in .env file
+      - CONVEX_CLOUD_ORIGIN=${CONVEX_CLOUD_ORIGIN:-http://127.0.0.1:3210}
+      - CONVEX_SITE_ORIGIN=${CONVEX_SITE_ORIGIN:-http://127.0.0.1:3211}
+      # Uncomment for Postgres (e.g., Neon, Supabase Postgres)
+      # - POSTGRES_URL=${POSTGRES_URL}
+      # Uncomment for S3 storage
+      # - AWS_REGION=${AWS_REGION}
+      # - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      # - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      # - S3_STORAGE_EXPORTS_BUCKET=${S3_STORAGE_EXPORTS_BUCKET}
+      # - S3_STORAGE_MODULES_BUCKET=${S3_STORAGE_MODULES_BUCKET}
+      # - S3_STORAGE_FILES_BUCKET=${S3_STORAGE_FILES_BUCKET}
+      # - S3_STORAGE_SEARCH_BUCKET=${S3_STORAGE_SEARCH_BUCKET}
+
+  dashboard:
+    image: ghcr.io/get-convex/convex-dashboard:latest
+    ports:
+      - "6791:6791"  # Dashboard UI
+    environment:
+      - NEXT_PUBLIC_DEPLOYMENT_URL=${CONVEX_CLOUD_ORIGIN:-http://127.0.0.1:3210}
+    depends_on:
+      - backend
+
+volumes:
+  convex_data:

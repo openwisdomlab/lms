@@ -7,18 +7,28 @@ import { ConvexAuthProvider } from "@convex-dev/auth/react";
 // Create singleton client only on the client side
 let convexClient: ConvexReactClient | null = null;
 
+function getConvexUrl(): string {
+  // Priority: Self-hosted URL > Convex Cloud URL
+  const selfHostedUrl = process.env.NEXT_PUBLIC_CONVEX_SELF_HOSTED_URL;
+  const cloudUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
+
+  const url = selfHostedUrl || cloudUrl;
+
+  if (!url) {
+    throw new Error(
+      "Neither NEXT_PUBLIC_CONVEX_SELF_HOSTED_URL nor NEXT_PUBLIC_CONVEX_URL is set. Please check your environment configuration."
+    );
+  }
+
+  return url;
+}
+
 function getConvexClient(): ConvexReactClient {
   if (convexClient) {
     return convexClient;
   }
 
-  const url = process.env.NEXT_PUBLIC_CONVEX_URL;
-  if (!url) {
-    throw new Error(
-      "NEXT_PUBLIC_CONVEX_URL is not set. Please check your environment configuration."
-    );
-  }
-
+  const url = getConvexUrl();
   convexClient = new ConvexReactClient(url);
   return convexClient;
 }

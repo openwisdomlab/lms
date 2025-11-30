@@ -1,0 +1,45 @@
+# Fly.io configuration for Convex self-hosted backend
+# Deploy with: fly deploy
+# Docs: https://fly.io/docs/
+
+app = "lms-convex-backend"
+primary_region = "sjc"  # San Jose, change to your preferred region
+
+[build]
+  image = "ghcr.io/get-convex/convex-backend:latest"
+
+[env]
+  # These will be set via fly secrets
+  # CONVEX_CLOUD_ORIGIN = "https://lms-convex-backend.fly.dev"
+  # CONVEX_SITE_ORIGIN = "https://lms-convex-backend.fly.dev"
+
+[http_service]
+  internal_port = 3210
+  force_https = true
+  auto_stop_machines = false  # Keep backend running
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 3210
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+
+# Persistent volume for SQLite database
+[mounts]
+  source = "convex_data"
+  destination = "/convex_data"
+  initial_size = "1gb"
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1
